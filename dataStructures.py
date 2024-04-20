@@ -27,17 +27,17 @@ class Array(object):
         return iter(self.items)
     
     def __add__(self, other):
-        combined_list = Array()
+        combined_list = Array(self.capacity, self.fillValue)
         
         for anElement in self.items:
             combined_list.items.append(anElement)
-            
+
         if isinstance(other, Array):
             for anElement in other.items:
                 combined_list.items.append(anElement)
-        else: 
-            raise TypeError("Unsupported operand type for + 'ArrayList' and '{}'".format(type(other).__name__))
-        
+        else:
+            raise TypeError("Unsupported operand type for + 'Array' and '{}'".format(type(other).__name__))
+
         return combined_list
     
     def __eq__(self , other):
@@ -65,6 +65,8 @@ class Array(object):
     def __getitem__(self, index):
         """Subscript operator for access at index.
         Precondition: 0 <= index < size()"""
+        print("Index:", index)
+        print("Size:", self.size())
         if index < 0 or index >= self.size():
             raise IndexError("Array index out of bounds")
         return self.items[index]
@@ -91,10 +93,23 @@ class Array(object):
         """Decreases the physical size of the array if necessary."""
         # Shrink the size by half but not below the default capacity
         # and remove those garbage cells from the underlying list
+        # new_capacity = max(self.capacity // 2, 1)  # Ensure the capacity doesn't go below 1
+        # self.items = self.items[:new_capacity]  # Truncate the list to the new capacity
+        # self.capacity = new_capacity
         newSize = max(self.capacity, len(self) // 2)
         for count in range(len(self) - newSize):   
             self.items.pop()
 
+    def append(self, newItem):
+        """Appends newItem at the end of the array."""
+        if len(self.items) == self.capacity:
+            # If the array is full, grow it
+            self.__grow()
+        
+        # Append the new item at the end
+        self.items.append(newItem)
+        self.logicalSize += 1
+        
     def insert(self, index, newItem):
         """Inserts item at index in the array."""  
         if index < 0:
@@ -105,7 +120,10 @@ class Array(object):
         if len(self.items) == self.capacity:
             self.__grow()
         
-        self.items.insert(index, newItem)
+        for i in range(self.size(), index, -1):
+            self.items[i] = self.items[i - 1]
+        # Add new item and increment logical size
+        self.items[index] = newItem
         self.logicalSize += 1    
         
 
@@ -114,14 +132,16 @@ class Array(object):
         try:
             if index < 0 or index >= self.logicalSize:
                 raise IndexError("Array index out of bounds")
-            
+
             remove_item = self.items.pop(index)
             self.logicalSize -= 1
-            
-            if (self.logicalSize <= self.capacity or self.logicalSize == 0.25 * self.capacity) and self.capacity >= 2 * self.capacity:
+            if self.logicalSize <= self.capacity // 2 and self.capacity > self.logicalSize:
+            # Shrink the array
                 self.__shrink()
+        
         except IndexError as e:
             print(e)
+        
         return remove_item
 
     def clear(self):
@@ -142,4 +162,40 @@ class Array(object):
         else: 
             return False
         
-    
+def main():
+    """Test code for modified Array class."""
+    a = Array(5)
+    print("Initial array:", a)
+    print("Size of a: ", a.logicalSize)
+    print("Capacity of a: ", a.capacity)
+    for item in range(4):
+        a.insert(0, item)
+    print("Insert 3, 2, 1, 0:", a)
+    a.insert(1, 77)
+    print("Insert 77 at index 1:", a)
+    a.insert(2, 88)
+    print("Insert 88 at index 2:", a)
+    a.insert(15, 10)
+    print("Insert 10 at index 15:", a)
+    a.insert(-1, 66)
+    print("Insert 66 at index -1:", a)
+    a.append(21)
+    print("Append 21", a)
+    print("Before shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
+    a.remove(3)
+    print("Remove item at index 3:", a)
+    print("After shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
+    print("Remove item at index 3:", a)
+    for count in range(6):
+        print("=====")
+        print("Before shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
+        a.remove(0)
+        print("Remove item at index 0:", a)
+        print("After shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
+    b = a.clone()
+    print("clone created:", b)
+    b.clear()
+    print("clone cleared:", b)
+
+if __name__ == "__main__":
+    main()
