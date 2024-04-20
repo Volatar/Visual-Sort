@@ -1,4 +1,4 @@
-from dataStructures import ArrayList
+from dataStructures import Array
 
 
 def bubbleSort(array):

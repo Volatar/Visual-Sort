@@ -1,18 +1,31 @@
 from bubbleSort import bubbleSort
 from binarySort import binarySort
-from dataStructures import ArrayList
+from dataStructures import Array
 from menu import menu
-from random import randint
+from randomArray import randomArray
 
 
 def main():
     # written by Taylor Sanderson
 
-    # create the array
-    # fill array with specified random values
+    numbers = randomArray()
+
     # present the menu with menu()
-    # take menu return value and select operation
-    pass
+    choice = 0
+    while True:
+        print ("Your array is currently:")
+        print(numbers)
+        choice = menu()
+
+        # take menu return value and select operation
+        if choice == 1:
+            numbers = bubbleSort(numbers)
+        if choice == 2:
+            numbers = binarySort(numbers)
+        if choice == 3:
+            numbers = randomArray()
+        if choice == 4:
+            break
 
 
 main()
