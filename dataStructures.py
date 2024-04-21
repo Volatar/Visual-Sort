@@ -65,8 +65,8 @@ class Array(object):
     def __getitem__(self, index):
         """Subscript operator for access at index.
         Precondition: 0 <= index < size()"""
-        print("Index:", index)
-        print("Size:", self.size())
+        print("Index:", index)  # this is supposed to be removed later right?
+        print("Size:", self.size())  # also this?
         if index < 0 or index >= self.size():
             raise IndexError("Array index out of bounds")
         return self.items[index]
