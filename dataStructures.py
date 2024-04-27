@@ -102,9 +102,9 @@ class Array(object):
 
     def append(self, newItem):
         """Appends newItem at the end of the array."""
-        if len(self.items) == self.capacity:
+        # if len(self.items) == self.capacity:
             # If the array is full, grow it
-            self.__grow()
+            # self.__grow()
         
         # Append the new item at the end
         self.items.append(newItem)
