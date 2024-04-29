@@ -7,7 +7,6 @@ from dataStructures import Array
 def randomArray():
     # create the array
 
-
     # get inputs on range of random numbers to use
     numberCount = int(input("How many numbers would you like in your array? (1-20): "))
 

@@ -13,7 +13,7 @@ def main():
     # present the menu with menu()
     choice = 0
     while True:
-        print ("Your array is currently:")
+        print("Your array is currently:")
         print(numbers)
         choice = menu()
 

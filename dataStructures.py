@@ -1,46 +1,63 @@
 class Array(object):
-    # written by Liwen Huang
-    # utilized the Array class from Lab 4
-    
+    # written by Taylor Sanderson
 
-    def __init__(self, capacity, fillValue = None):
-        """Capacity is the static size of the array.
-        fillValue is placed at each position."""
-        self.items = list()
+    def __init__(self, capacity, sourceCollection = None):
+        # creates object variables
+        # you will need a list, logical size, and physical size
+        if sourceCollection is None:
+            self.items = []
+        else:
+            self.items = sourceCollection
         self.logicalSize = 0
-        # Track the capacity and fill value for adjustments later
-        self.capacity = capacity   # default capacity of the array
-        self.fillValue = fillValue
-        for count in range(capacity):
-            self.items.append(fillValue)
+        self.physicalSize = capacity
 
-    def __len__(self):
-        """-> The capacity of the array."""
-        return len(self.items)
+    def isEmpty(self):
+        # checks if the array is currently empty
+        if len(self.items) == 0:
+            return True
+        else:
+            return False
+
+    def clear(self):
+        # empties the array
+        self.items = []
+        self.logicalSize = 0
+
+    def append(self, item):
+        # adds an item to the end of the array
+        # make sure to check for array sizing and increase if needed
+        if self.logicalSize == self.physicalSize:
+            self.__grow()
+
+        self.items.append(item)
+        self.logicalSize += 1
 
     def __str__(self):
-        """-> The string representation of the array."""
+        # returns a string representation of the array
+        # do not include empty space in the array
+        # this function is very important
         return str(self.items)
 
-    def __iter__(self):
-        """Supports traversal with a for loop."""
-        return iter(self.items)
-    
     def __add__(self, other):
-        combined_list = Array(self.capacity, self.fillValue)
-        
-        for anElement in self.items:
-            combined_list.items.append(anElement)
+        # returns a new arrayList containing the contents of self and other combined
+        # this is for when you do ArrayList + ArrayList
+        while self.logicalSize + len(other) > self.physicalSize:
+            self.__grow()
+
+        combined = self.items
+        count = self.logicalSize
 
         if isinstance(other, Array):
-            for anElement in other.items:
-                combined_list.items.append(anElement)
+            for item in other:
+                combined.append(item)
+                count += 1
         else:
-            raise TypeError("Unsupported operand type for + 'Array' and '{}'".format(type(other).__name__))
+            raise TypeError("Unsupported operand type for + 'Array' and '{}'".format(type(other).__name__)) # this line written by Liwen
 
-        return combined_list
-    
-    def __eq__(self , other):
+        combinedArray = Array(count, combined)
+        return combinedArray
+
+    def __eq__(self , other):  # written by Liwen
         # returns true if self and other contain the same information
         # false if they do not
         if isinstance(other, Array):
@@ -49,153 +66,68 @@ class Array(object):
                 return False
             # Iterate over elements and compare
             for i in range(len(self.items)):
-                if self.items[i]!= other.items[i]:
+                if self.items[i] != other.items[i]:
                     return False
             return True
-        else: 
+        else:
             return False
-    
+
     def __contains__(self, item):
         # checks if the value of item is found in the array
-        for anElement in self.items:
-            if anElement == item:
+        # return true if it is
+        # return false if it is not
+        # this is how we use the "in" operator
+        for items in self.items:
+            if items == item:
                 return True
         return False
-    
+
     def __getitem__(self, index):
-        """Subscript operator for access at index.
-        Precondition: 0 <= index < size()"""
-        print("Index:", index)  # this is supposed to be removed later right?
-        print("Size:", self.size())  # also this?
-        if index < 0 or index >= self.size():
-            raise IndexError("Array index out of bounds")
-        return self.items[index]
+        # access an item at the specified index
+        if index <= 0 or index > self.logicalSize:
+            raise IndexError("Index out of range")
+        else:
+            return self.items[index]
 
     def __setitem__(self, index, newItem):
-        """Subscript operator for replacement at index.
-        Precondition: 0 <= index < size()"""
-        if index < 0 or index >= self.size():
-            raise IndexError("Array index out of bounds")
-        self.items[index] = newItem
+        # replace the item at specified index
+        if index <= 0 or index > self.logicalSize:
+            raise IndexError("Index out of range")
+        else:
+            self.items[index] = newItem
 
     def size(self):
-        """-> The number of items in the array."""
+        # return logical size
         return self.logicalSize
 
     def __grow(self):
-        """Increases the physical size of the array if necessary."""
-        # Double the physical size if no more room for items
-        # and add the fillValue to the new cells in the underlying list
-        for count in range(len(self)):
-            self.items.append(self.fillValue)
+        # increase the physical size of the array to double
+        self.physicalSize = self.physicalSize * 2
 
     def __shrink(self):
-        """Decreases the physical size of the array if necessary."""
-        # Shrink the size by half but not below the default capacity
-        # and remove those garbage cells from the underlying list
-        # new_capacity = max(self.capacity // 2, 1)  # Ensure the capacity doesn't go below 1
-        # self.items = self.items[:new_capacity]  # Truncate the list to the new capacity
-        # self.capacity = new_capacity
-        newSize = max(self.capacity, len(self) // 2)
-        for count in range(len(self) - newSize):   
-            self.items.pop()
+        # decrease the physical size of the array by half
+        self.physicalSize = self.physicalSize // 2
 
-    def append(self, newItem):
-        """Appends newItem at the end of the array."""
-        if len(self.items) == self.capacity:
-            # If the array is full, grow it
-            self.__grow()
-        
-        # Append the new item at the end
-        self.items.append(newItem)
-        self.logicalSize += 1
-        
     def insert(self, index, newItem):
-        """Inserts item at index in the array."""  
-        if index < 0:
-            index = 0
-        elif index > self.logicalSize:
-            index = self.logicalSize
-        
-        if len(self.items) == self.capacity:
+        # Inserts item at index in the array.
+        self.items.insert(index, newItem)
+        self.logicalSize += 1
+        if self.logicalSize == self.physicalSize:
             self.__grow()
-        
-        for i in range(self.size(), index, -1):
-            self.items[i] = self.items[i - 1]
-        # Add new item and increment logical size
-        self.items[index] = newItem
-        self.logicalSize += 1    
-        
 
     def remove(self, index):
-        """Removes and returns item at index in the array."""
-        try:
-            if index < 0 or index >= self.logicalSize:
-                raise IndexError("Array index out of bounds")
-
-            remove_item = self.items.pop(index)
-            self.logicalSize -= 1
-            if self.logicalSize <= self.capacity // 2 and self.capacity > self.logicalSize:
+        # removes and returns item at index in the array
+        returnValue = self.items.pop(index)
+        self.logicalSize -= 1
+        if self.logicalSize <= self.physicalSize // 2 and self.physicalSize > self.logicalSize: # written by Liwen
             # Shrink the array
-                self.__shrink()
-        
-        except IndexError as e:
-            print(e)
-        
-        return remove_item
-
-    def clear(self):
-        """Removes all data items and resets the array to default."""
-        self.items = [self.fillValue] * self.capacity
-        self.logicalSize = 0
+            self.__shrink()
+        return returnValue
 
     def clone(self):
-        """Creates and returns a clone of this Array object."""
-        new_arr = Array(self.capacity, self.fillValue)
-        new_arr.items = self.items.copy()
-        new_arr.logicalSize = self.logicalSize
-        return new_arr
+        # create a copy of this array and return it
+        new = Array(self.physicalSize, self.items.copy())
+        return new
 
-    def isEmpty(self):
-        if len(self.items) == 0:
-            return True
-        else: 
-            return False
-        
-def main():
-    """Test code for modified Array class."""
-    a = Array(5)
-    print("Initial array:", a)
-    print("Size of a: ", a.logicalSize)
-    print("Capacity of a: ", a.capacity)
-    for item in range(4):
-        a.insert(0, item)
-    print("Insert 3, 2, 1, 0:", a)
-    a.insert(1, 77)
-    print("Insert 77 at index 1:", a)
-    a.insert(2, 88)
-    print("Insert 88 at index 2:", a)
-    a.insert(15, 10)
-    print("Insert 10 at index 15:", a)
-    a.insert(-1, 66)
-    print("Insert 66 at index -1:", a)
-    a.append(21)
-    print("Append 21", a)
-    print("Before shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
-    a.remove(3)
-    print("Remove item at index 3:", a)
-    print("After shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
-    print("Remove item at index 3:", a)
-    for count in range(6):
-        print("=====")
-        print("Before shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
-        a.remove(0)
-        print("Remove item at index 0:", a)
-        print("After shrink: Capacity =", a.capacity, "Logical size =", a.logicalSize)
-    b = a.clone()
-    print("clone created:", b)
-    b.clear()
-    print("clone cleared:", b)
-
-if __name__ == "__main__":
-    main()
+    def __len__(self):
+        return self.logicalSize
