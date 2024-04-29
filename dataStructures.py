@@ -119,7 +119,7 @@ class Array(object):
         # removes and returns item at index in the array
         returnValue = self.items.pop(index)
         self.logicalSize -= 1
-        if self.logicalSize <= self.physicalSize // 2 and self.physicalSize > self.logicalSize: # written by Liwen
+        if self.logicalSize <= self.physicalSize // 2 and self.physicalSize > self.logicalSize:  # written by Liwen
             # Shrink the array
             self.__shrink()
         return returnValue
