@@ -84,15 +84,15 @@ class Array(object):
 
     def __getitem__(self, index):
         # access an item at the specified index
-        if index <= 0 or index > self.logicalSize:
-            raise IndexError("Index out of range")
+        if index < 0 or index > self.logicalSize:
+            raise IndexError("Index out of range: ", index)
         else:
             return self.items[index]
 
     def __setitem__(self, index, newItem):
         # replace the item at specified index
-        if index <= 0 or index > self.logicalSize:
-            raise IndexError("Index out of range")
+        if index < 0 or index > self.logicalSize:
+            raise IndexError("Index out of range: ", index)
         else:
             self.items[index] = newItem
 

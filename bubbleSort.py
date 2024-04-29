@@ -16,16 +16,10 @@ def bubbleSort(array):
                 swapped = True
             i += 1
         print(str(array))
-        if not swapped: return
+        if not swapped:
+            break
         arrayLength -= 1
         
     return array
-
-#Testing: To be removed later
-if __name__ == "__main__":
-    array = [4, 6, 2, 3, 1, 0]
-    sorted_arr = bubbleSort(array)
-    print(sorted_arr)
-    
 
 
