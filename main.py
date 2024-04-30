@@ -17,6 +17,7 @@ def main():
     while True:
         print("Your array is currently:")
         print(numbers)
+        input("Press Enter to continue...")
         choice = menu()
 
         # take menu return value and select operation
