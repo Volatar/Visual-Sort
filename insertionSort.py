@@ -5,7 +5,7 @@ def insertionSort(array):
     # written by Morgan Roman Mach
     # implement insertion sort
     # output the contents of the array using the __str__ method each step of the way to show your work
-        # Traverse through 1 to len(array)
+    # Traverse through 1 to len(array)
     for i in range(1, array.size()):
         key = array[i]  # Select the current element to be compared
 
