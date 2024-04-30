@@ -5,4 +5,14 @@ def selectionSort(array):
     # written by John Moukas
     # implement selection sort
     # output the contents of the array using the __str__ method each step of the way to show your work
-    pass
+    arrayLength = len(array)
+    for i in range(arrayLength):
+        min_idx = i
+        for j in range(i+1, arrayLength):
+            if array[j] < array[min_idx]:
+                min_idx = j
+        print(str(array))
+        # Swap the found minimum element with the first element
+        array[i], array[min_idx] = array[min_idx], array[i]
+    
+    return array
