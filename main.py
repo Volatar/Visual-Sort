@@ -9,15 +9,15 @@ from randomArray import randomArray
 
 def main():
     # written by Taylor Sanderson
+    skip = False
 
     numbers = randomArray()
+    print("Your array is currently:")
+    print(numbers)
 
     # present the menu with menu()
     choice = 0
     while True:
-        print("Your array is currently:")
-        print(numbers)
-        input("Press Enter to continue...")
         choice = menu()
 
         # take menu return value and select operation
@@ -30,9 +30,18 @@ def main():
         if choice == 4:
             numbers = insertionSort(numbers)
         if choice == 5:
-            numbers = randomArray()
+            skip = True
         if choice == 6:
             break
 
+        if not skip:
+            print("Your array is now:")
+            print(numbers)
+            input("Press Enter to continue...")
+
+        skip = False
+        numbers = randomArray()
+        print("Your new array of numbers is:")
+        print(numbers)
 
 main()
