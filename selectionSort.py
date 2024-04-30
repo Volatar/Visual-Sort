@@ -12,7 +12,6 @@ def selectionSort(array):
             if array[j] < array[min_idx]:
                 min_idx = j
         print(str(array))
-        # Swap the found minimum element with the first element
         array[i], array[min_idx] = array[min_idx], array[i]
     
     return array
